@@ -173,36 +173,43 @@ export function WorkflowList() {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-bold">My Workflows</h1>
-          <p className="text-gray-500 mt-1">Create and manage your automation workflows</p>
+          <h1 className="text-2xl sm:text-3xl font-bold">My Workflows</h1>
+          <p className="text-sm sm:text-base text-gray-500 mt-1">Create and manage your automation workflows</p>
         </div>
         <div className="flex gap-2">
-          <Button onClick={() => setShowTemplates(true)} variant="outline" className="gap-2">
+          <Button onClick={() => setShowTemplates(true)} variant="outline" className="gap-2 flex-1 sm:flex-none">
             <Sparkles className="w-4 h-4" />
-            Templates
+            <span className="hidden sm:inline">Templates</span>
           </Button>
-          <Button onClick={handleCreateWorkflow} disabled={isCreating} className="gap-2">
+          <Button onClick={handleCreateWorkflow} disabled={isCreating} className="gap-2 flex-1 sm:flex-none">
             {isCreating ? <Loader2 className="w-4 h-4 animate-spin" /> : <Plus className="w-4 h-4" />}
-            New Workflow
+            <span className="hidden sm:inline">New Workflow</span>
+            <span className="sm:hidden">New</span>
           </Button>
         </div>
       </div>
 
       {/* Workflows Grid */}
       {workflows.length === 0 ? (
-        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="text-center py-20">
-          <div className="text-6xl mb-4">🚀</div>
-          <h3 className="text-2xl font-bold mb-2">No workflows yet</h3>
-          <p className="text-gray-500 mb-6">Create your first workflow to start automating tasks</p>
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="text-center py-12 sm:py-20"
+        >
+          <div className="text-5xl sm:text-6xl mb-4">🚀</div>
+          <h3 className="text-xl sm:text-2xl font-bold mb-2">No workflows yet</h3>
+          <p className="text-sm sm:text-base text-gray-500 mb-6 px-4">
+            Create your first workflow to start automating tasks
+          </p>
           <Button onClick={handleCreateWorkflow} disabled={isCreating}>
             {isCreating ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : <Plus className="w-4 h-4 mr-2" />}
             Create Your First Workflow
           </Button>
         </motion.div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
           {workflows.map((workflow, index) => (
             <motion.div
               key={workflow.id}
@@ -211,29 +218,29 @@ export function WorkflowList() {
               transition={{ delay: index * 0.05 }}
             >
               <Card
-                className="p-6 hover:shadow-lg transition-shadow cursor-pointer group"
+                className="p-4 sm:p-6 hover:shadow-lg transition-shadow cursor-pointer group"
                 onClick={() => router.push(`/protected/workflows/${workflow.id}`)}
               >
                 {/* Header */}
-                <div className="flex items-start justify-between mb-4">
-                  <div className="flex-1">
-                    <h3 className="font-semibold text-lg mb-1 group-hover:text-blue-600 transition-colors">
+                <div className="flex items-start justify-between mb-3 sm:mb-4 gap-2">
+                  <div className="flex-1 min-w-0">
+                    <h3 className="font-semibold text-base sm:text-lg mb-1 group-hover:text-blue-600 transition-colors truncate">
                       {workflow.name}
                     </h3>
                     {workflow.description && (
-                      <p className="text-sm text-gray-500 line-clamp-2">{workflow.description}</p>
+                      <p className="text-xs sm:text-sm text-gray-500 line-clamp-2">{workflow.description}</p>
                     )}
                   </div>
                   <Badge
                     variant={workflow.is_active ? "default" : "secondary"}
-                    className={workflow.is_active ? "bg-green-500 hover:bg-green-600" : ""}
+                    className={`${workflow.is_active ? "bg-green-500 hover:bg-green-600" : ""} text-xs shrink-0`}
                   >
                     {workflow.is_active ? "Active" : "Inactive"}
                   </Badge>
                 </div>
 
                 {/* Stats */}
-                <div className="flex items-center gap-4 text-sm text-gray-500 mb-4">
+                <div className="flex items-center gap-3 sm:gap-4 text-xs sm:text-sm text-gray-500 mb-3 sm:mb-4">
                   <div className="flex items-center gap-1">
                     <div className="w-2 h-2 rounded-full bg-blue-500" />
                     <span>{workflow.nodes?.length || 0} nodes</span>
@@ -245,22 +252,23 @@ export function WorkflowList() {
                 </div>
 
                 {/* Footer */}
-                <div className="flex items-center justify-between pt-4 border-t border-gray-200 dark:border-gray-700">
+                <div className="flex items-center justify-between pt-3 sm:pt-4 border-t border-gray-200 dark:border-gray-700">
                   <div className="flex items-center gap-1 text-xs text-gray-500">
                     <Clock className="w-3 h-3" />
-                    <span>
+                    <span className="truncate">
                       {formatDistanceToNow(new Date(workflow.updated_at), {
                         addSuffix: true,
                       })}
                     </span>
                   </div>
 
-                  <div className="flex items-center gap-2">
+                  <div className="flex items-center gap-1 sm:gap-2">
                     <Button
                       size="sm"
                       variant="ghost"
                       onClick={(e) => handleExecuteWorkflow(workflow.id, e)}
-                      className="gap-1"
+                      className="gap-1 h-8 w-8 p-0 sm:h-9 sm:w-auto sm:px-3"
+                      title="Execute workflow"
                     >
                       <Play className="w-3 h-3" />
                     </Button>
@@ -268,7 +276,8 @@ export function WorkflowList() {
                       size="sm"
                       variant="ghost"
                       onClick={(e) => confirmDelete(workflow.id, e)}
-                      className="gap-1 text-red-500 hover:text-red-600"
+                      className="gap-1 text-red-500 hover:text-red-600 h-8 w-8 p-0 sm:h-9 sm:w-auto sm:px-3"
+                      title="Delete workflow"
                     >
                       <Trash2 className="w-3 h-3" />
                     </Button>

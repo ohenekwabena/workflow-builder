@@ -65,7 +65,7 @@ export function NodeLibrary({ onClose }: NodeLibraryProps) {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm flex items-center justify-center"
+      className="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4"
       onClick={onClose}
     >
       <motion.div
@@ -73,14 +73,14 @@ export function NodeLibrary({ onClose }: NodeLibraryProps) {
         animate={{ scale: 1, opacity: 1, y: 0 }}
         exit={{ scale: 0.9, opacity: 0, y: 20 }}
         transition={{ type: "spring", damping: 25, stiffness: 300 }}
-        className="w-full max-w-4xl max-h-[80vh] bg-white dark:bg-gray-900 rounded-2xl shadow-2xl overflow-hidden mx-4"
+        className="w-full max-w-4xl max-h-[90vh] sm:max-h-[80vh] bg-white dark:bg-gray-900 rounded-xl sm:rounded-2xl shadow-2xl overflow-hidden"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header */}
-        <div className="px-6 py-4 border-b border-gray-200 dark:border-gray-700 flex items-center justify-between">
+        <div className="px-4 sm:px-6 py-3 sm:py-4 border-b border-gray-200 dark:border-gray-700 flex items-center justify-between">
           <div>
-            <h2 className="text-2xl font-bold">Add Node</h2>
-            <p className="text-sm text-gray-500 mt-1">Choose a node type to add to your workflow</p>
+            <h2 className="text-xl sm:text-2xl font-bold">Add Node</h2>
+            <p className="text-xs sm:text-sm text-gray-500 mt-1">Choose a node type to add to your workflow</p>
           </div>
           <button
             onClick={onClose}
@@ -91,25 +91,25 @@ export function NodeLibrary({ onClose }: NodeLibraryProps) {
         </div>
 
         {/* Search */}
-        <div className="px-6 py-4 border-b border-gray-200 dark:border-gray-700">
+        <div className="px-4 sm:px-6 py-3 sm:py-4 border-b border-gray-200 dark:border-gray-700">
           <div className="relative">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 sm:w-5 sm:h-5 text-gray-400" />
             <Input
               type="text"
               placeholder="Search nodes..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-10"
+              className="pl-9 sm:pl-10 text-sm"
             />
           </div>
         </div>
 
         {/* Categories */}
-        <div className="px-6 py-4 border-b border-gray-200 dark:border-gray-700">
-          <div className="flex gap-2">
+        <div className="px-4 sm:px-6 py-3 sm:py-4 border-b border-gray-200 dark:border-gray-700">
+          <div className="flex flex-wrap gap-2">
             <button
               onClick={() => setSelectedCategory(null)}
-              className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+              className={`px-3 sm:px-4 py-1.5 sm:py-2 rounded-lg text-xs sm:text-sm font-medium transition-colors ${
                 selectedCategory === null
                   ? "bg-gray-900 text-white dark:bg-white dark:text-gray-900"
                   : "bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700"
@@ -121,33 +121,33 @@ export function NodeLibrary({ onClose }: NodeLibraryProps) {
               <button
                 key={category.id}
                 onClick={() => setSelectedCategory(category.id)}
-                className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors flex items-center gap-2 ${
+                className={`px-3 sm:px-4 py-1.5 sm:py-2 rounded-lg text-xs sm:text-sm font-medium transition-colors flex items-center gap-1.5 sm:gap-2 ${
                   selectedCategory === category.id
                     ? "bg-gray-900 text-white dark:bg-white dark:text-gray-900"
                     : "bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700"
                 }`}
               >
-                <span>{category.icon}</span>
-                <span>{category.label}</span>
+                <span className="text-sm sm:text-base">{category.icon}</span>
+                <span className="hidden xs:inline">{category.label}</span>
               </button>
             ))}
           </div>
         </div>
 
         {/* Node Grid */}
-        <div className="px-6 py-4 overflow-y-auto max-h-[50vh]">
-          <div className="grid grid-cols-2 gap-4">
+        <div className="px-4 sm:px-6 py-4 overflow-y-auto max-h-[calc(90vh-16rem)] sm:max-h-[50vh] pb-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
             {filteredNodes.map((node) => (
               <motion.button
                 key={node.type}
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
                 onClick={() => handleAddNode(node.type)}
-                className="p-4 border-2 border-gray-200 dark:border-gray-700 rounded-xl hover:border-gray-400 dark:hover:border-gray-500 transition-all text-left group"
+                className="p-3 sm:p-4 border-2 border-gray-200 dark:border-gray-700 rounded-lg sm:rounded-xl hover:border-gray-400 dark:hover:border-gray-500 transition-all text-left group"
               >
-                <div className="flex items-start gap-3">
+                <div className="flex items-start gap-2 sm:gap-3">
                   <div
-                    className={`w-12 h-12 rounded-lg ${node.color} flex items-center justify-center text-2xl shrink-0 group-hover:scale-110 transition-transform`}
+                    className={`w-10 h-10 sm:w-12 sm:h-12 rounded-lg ${node.color} flex items-center justify-center text-xl sm:text-2xl shrink-0 group-hover:scale-110 transition-transform`}
                   >
                     {node.icon}
                   </div>
@@ -161,8 +161,8 @@ export function NodeLibrary({ onClose }: NodeLibraryProps) {
           </div>
 
           {filteredNodes.length === 0 && (
-            <div className="text-center py-12">
-              <p className="text-gray-500">No nodes found matching your search</p>
+            <div className="text-center py-8 sm:py-12">
+              <p className="text-sm sm:text-base text-gray-500">No nodes found matching your search</p>
             </div>
           )}
         </div>

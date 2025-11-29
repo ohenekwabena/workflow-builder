@@ -118,11 +118,11 @@ export function WorkflowCanvas() {
         />
 
         {/* Top toolbar */}
-        <Panel position="top-center" className="flex gap-2 z-10 isolate">
+        <Panel position="top-center" className="flex gap-2 z-10 isolate w-full justify-center px-2 sm:px-0 pl-0">
           <motion.div
             initial={{ y: -20, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
-            className="bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 px-4 py-2 flex items-center gap-3"
+            className="bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 px-2 sm:px-4 py-2 flex items-center gap-1 sm:gap-3"
           >
             <Button
               onClick={() => {
@@ -130,17 +130,27 @@ export function WorkflowCanvas() {
                 setShowNodeLibrary(true);
               }}
               size="sm"
-              className="gap-2"
+              className="gap-1 sm:gap-2 text-xs sm:text-sm h-8 sm:h-9 px-2 sm:px-3"
             >
-              <Plus className="w-4 h-4" />
-              Add Node
+              <Plus className="w-3 h-3 sm:w-4 sm:h-4" />
+              <span className="hidden xs:inline">Add Node</span>
             </Button>
 
             <div className="w-px h-6 bg-gray-300 dark:bg-gray-600" />
 
-            <Button onClick={handleSave} size="sm" variant="outline" disabled={isSaving} className="gap-2">
-              {isSaving ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
-              {isSaving ? "Saving..." : "Save"}
+            <Button
+              onClick={handleSave}
+              size="sm"
+              variant="outline"
+              disabled={isSaving}
+              className="gap-1 sm:gap-2 text-xs sm:text-sm h-8 sm:h-9 px-2 sm:px-3"
+            >
+              {isSaving ? (
+                <Loader2 className="w-3 h-3 sm:w-4 sm:h-4 animate-spin" />
+              ) : (
+                <Save className="w-3 h-3 sm:w-4 sm:h-4" />
+              )}
+              <span className="hidden sm:inline">{isSaving ? "Saving..." : "Save"}</span>
             </Button>
 
             <Button
@@ -148,10 +158,14 @@ export function WorkflowCanvas() {
               size="sm"
               variant="default"
               disabled={isExecuting || nodes.length === 0}
-              className="gap-2 bg-green-600 hover:bg-green-700"
+              className="gap-1 sm:gap-2 bg-green-600 hover:bg-green-700 text-xs sm:text-sm h-8 sm:h-9 px-2 sm:px-3"
             >
-              {isExecuting ? <Loader2 className="w-4 h-4 animate-spin" /> : <Play className="w-4 h-4" />}
-              {isExecuting ? "Running..." : "Run Workflow"}
+              {isExecuting ? (
+                <Loader2 className="w-3 h-3 sm:w-4 sm:h-4 animate-spin" />
+              ) : (
+                <Play className="w-3 h-3 sm:w-4 sm:h-4" />
+              )}
+              <span className="hidden sm:inline">{isExecuting ? "Running..." : "Run Workflow"}</span>
             </Button>
           </motion.div>
         </Panel>

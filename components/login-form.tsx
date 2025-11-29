@@ -3,23 +3,14 @@
 import { cn } from "@/lib/utils";
 import { createClient } from "@/lib/supabase/client";
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
-export function LoginForm({
-  className,
-  ...props
-}: React.ComponentPropsWithoutRef<"div">) {
+export function LoginForm({ className, ...props }: React.ComponentPropsWithoutRef<"div">) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
@@ -48,63 +39,82 @@ export function LoginForm({
   };
 
   return (
-    <div className={cn("flex flex-col gap-6", className)} {...props}>
-      <Card>
-        <CardHeader>
-          <CardTitle className="text-2xl">Login</CardTitle>
-          <CardDescription>
-            Enter your email below to login to your account
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
+    <div className={cn("flex flex-col gap-6 w-full max-w-md", className)} {...props}>
+      <div className="text-center space-y-2 mb-8">
+        <div className="text-4xl mb-4">🔄</div>
+        <h1 className="text-3xl font-bold tracking-tight">Welcome back</h1>
+        <p className="text-gray-500 dark:text-gray-400">Sign in to your account to continue</p>
+      </div>
+
+      <Card className="border-2">
+        <CardContent className="pt-6">
           <form onSubmit={handleLogin}>
-            <div className="flex flex-col gap-6">
-              <div className="grid gap-2">
-                <Label htmlFor="email">Email</Label>
+            <div className="flex flex-col gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="email" className="text-sm font-medium">
+                  Email address
+                </Label>
                 <Input
                   id="email"
                   type="email"
-                  placeholder="m@example.com"
+                  placeholder="name@company.com"
                   required
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
+                  className="h-11"
                 />
               </div>
-              <div className="grid gap-2">
-                <div className="flex items-center">
-                  <Label htmlFor="password">Password</Label>
+              <div className="space-y-2">
+                <div className="flex items-center justify-between">
+                  <Label htmlFor="password" className="text-sm font-medium">
+                    Password
+                  </Label>
                   <Link
                     href="/auth/forgot-password"
-                    className="ml-auto inline-block text-sm underline-offset-4 hover:underline"
+                    className="text-sm text-blue-600 hover:text-blue-700 dark:text-blue-400 font-medium"
                   >
-                    Forgot your password?
+                    Forgot password?
                   </Link>
                 </div>
                 <Input
                   id="password"
                   type="password"
+                  placeholder="Enter your password"
                   required
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
+                  className="h-11"
                 />
               </div>
-              {error && <p className="text-sm text-red-500">{error}</p>}
-              <Button type="submit" className="w-full" disabled={isLoading}>
-                {isLoading ? "Logging in..." : "Login"}
+              {error && (
+                <div className="p-3 text-sm text-red-600 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg">
+                  {error}
+                </div>
+              )}
+              <Button type="submit" className="w-full h-11 text-base font-medium mt-2" disabled={isLoading}>
+                {isLoading ? (
+                  <>
+                    <span className="animate-spin mr-2">⏳</span>
+                    Signing in...
+                  </>
+                ) : (
+                  "Sign in"
+                )}
               </Button>
-            </div>
-            <div className="mt-4 text-center text-sm">
-              Don&apos;t have an account?{" "}
-              <Link
-                href="/auth/sign-up"
-                className="underline underline-offset-4"
-              >
-                Sign up
-              </Link>
             </div>
           </form>
         </CardContent>
       </Card>
+
+      <div className="text-center text-sm text-gray-600 dark:text-gray-400">
+        Don&apos;t have an account?{" "}
+        <Link
+          href="/auth/sign-up"
+          className="font-medium text-blue-600 hover:text-blue-700 dark:text-blue-400 hover:underline"
+        >
+          Sign up for free
+        </Link>
+      </div>
     </div>
   );
 }
