@@ -10,6 +10,7 @@ import { Badge } from "@/components/ui/badge";
 import { Workflow } from "@/lib/workflow/types";
 import { TemplateLibraryModal } from "./template-library-modal";
 import { formatDistanceToNow } from "date-fns";
+import { toast } from "sonner";
 
 export function WorkflowList() {
   const router = useRouter();
@@ -58,7 +59,9 @@ export function WorkflowList() {
       router.push(`/protected/workflows/${data.workflow.id}`);
     } catch (error) {
       console.error("Error creating workflow:", error);
-      alert(error instanceof Error ? error.message : "Failed to create workflow");
+      toast.error("Failed to create workflow", {
+        description: error instanceof Error ? error.message : "Unknown error",
+      });
     } finally {
       setIsCreating(false);
     }
@@ -104,8 +107,12 @@ export function WorkflowList() {
       if (!response.ok) throw new Error("Failed to delete workflow");
 
       setWorkflows(workflows.filter((w) => w.id !== id));
+      toast.success("Workflow deleted successfully");
     } catch (error) {
       console.error("Error deleting workflow:", error);
+      toast.error("Failed to delete workflow", {
+        description: error instanceof Error ? error.message : "Unknown error",
+      });
     }
   };
 
@@ -129,15 +136,19 @@ export function WorkflowList() {
         throw new Error(data.error || "Failed to execute workflow");
       }
 
-      alert(
-        `Workflow execution started!\n\nExecution ID: ${data.execution_id}\n\nCheck the Executions page to see the results.`
-      );
-
-      // Redirect to executions page
-      router.push(`/protected/executions/${data.execution_id}`);
+      toast.success("Workflow execution started!", {
+        description: `Execution ID: ${data.execution_id}`,
+        duration: 5000,
+        action: {
+          label: "View",
+          onClick: () => router.push(`/protected/executions/${data.execution_id}`),
+        },
+      });
     } catch (error) {
       console.error("Error executing workflow:", error);
-      alert(`Failed to execute workflow: ${error instanceof Error ? error.message : "Unknown error"}`);
+      toast.error("Failed to execute workflow", {
+        description: error instanceof Error ? error.message : "Unknown error",
+      });
     }
   };
 

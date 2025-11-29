@@ -11,6 +11,7 @@ import { OnboardingTooltip } from "./onboarding-tooltip";
 import { Button } from "@/components/ui/button";
 import { Plus, Play, Save, Loader2 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import { toast } from "sonner";
 
 const nodeTypes = {
   customNode: CustomNode,
@@ -46,10 +47,12 @@ export function WorkflowCanvas() {
   const handleSave = async () => {
     try {
       await saveWorkflow();
-      // You can add a toast notification here
-      console.log("Workflow saved successfully");
+      toast.success("Workflow saved successfully!");
     } catch (error) {
       console.error("Failed to save:", error);
+      toast.error("Failed to save workflow", {
+        description: error instanceof Error ? error.message : "Unknown error",
+      });
     }
   };
 
@@ -61,14 +64,17 @@ export function WorkflowCanvas() {
 
       // Show success feedback
       if (result?.execution_id) {
-        alert(
-          `Workflow execution queued!\n\nExecution ID: ${result.execution_id}\n\nThe workflow will be processed in the background. Check the Executions page to see the results.\n\nNote: You need to run the queue processor (npm run process-queue) to execute queued workflows.`
-        );
+        toast.success("Workflow execution queued!", {
+          description: `Execution ID: ${result.execution_id}`,
+          duration: 5000,
+        });
       }
     } catch (error) {
       console.error("Failed to execute:", error);
       const errorMessage = error instanceof Error ? error.message : "Unknown error";
-      alert(`Failed to execute workflow:\n\n${errorMessage}`);
+      toast.error("Failed to execute workflow", {
+        description: errorMessage,
+      });
     }
   };
 
