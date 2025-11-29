@@ -1,109 +1,220 @@
 <a href="https://demo-nextjs-with-supabase.vercel.app/">
-  <img alt="Next.js and Supabase Starter Kit - the fastest way to build apps with Next.js and Supabase" src="https://demo-nextjs-with-supabase.vercel.app/opengraph-image.png">
-  <h1 align="center">Next.js and Supabase Starter Kit</h1>
+  <h1 align="center">🎨 Visual Workflow Builder</h1>
 </a>
 
 <p align="center">
- The fastest way to build apps with Next.js and Supabase
+ A powerful visual automation workflow builder with Next.js, React Flow, and Supabase
 </p>
 
 <p align="center">
   <a href="#features"><strong>Features</strong></a> ·
-  <a href="#demo"><strong>Demo</strong></a> ·
-  <a href="#deploy-to-vercel"><strong>Deploy to Vercel</strong></a> ·
-  <a href="#clone-and-run-locally"><strong>Clone and run locally</strong></a> ·
-  <a href="#feedback-and-issues"><strong>Feedback and issues</strong></a>
-  <a href="#more-supabase-examples"><strong>More Examples</strong></a>
+  <a href="#quick-start"><strong>Quick Start</strong></a> ·
+  <a href="#node-types"><strong>Node Types</strong></a> ·
+  <a href="#documentation"><strong>Documentation</strong></a> ·
+  <a href="#examples"><strong>Examples</strong></a>
 </p>
 <br/>
 
-## Features
+## 🚀 Features
 
-- Works across the entire [Next.js](https://nextjs.org) stack
-  - App Router
-  - Pages Router
-  - Proxy
-  - Client
-  - Server
-  - It just works!
-- supabase-ssr. A package to configure Supabase Auth to use cookies
-- Password-based authentication block installed via the [Supabase UI Library](https://supabase.com/ui/docs/nextjs/password-based-auth)
-- Styling with [Tailwind CSS](https://tailwindcss.com)
-- Components with [shadcn/ui](https://ui.shadcn.com/)
-- Optional deployment with [Supabase Vercel Integration and Vercel deploy](#deploy-your-own)
-  - Environment variables automatically assigned to Vercel project
+### Visual Workflow Builder
+- **Drag-and-drop canvas** powered by React Flow
+- **Real-time node connections** with smooth animations
+- **Beautiful UI** with Aceternity UI and Shadcn components
+- **Dark mode support** out of the box
+- **Responsive design** for all screen sizes
 
-## Demo
+### Node Types Available
+- **⏰ Triggers**: Schedule (cron), Webhooks
+- **📊 Data Sources**: Weather API, GitHub API
+- **🎯 Actions**: Email, HTTP Requests
+- **🧠 Logic**: AI Summarizer (Claude), Data Transform
 
-You can view a fully working demo at [demo-nextjs-with-supabase.vercel.app](https://demo-nextjs-with-supabase.vercel.app/).
+### Execution Engine
+- **Background processing** with queue system
+- **Step-by-step execution** tracking
+- **Error handling** with detailed logs
+- **Manual and scheduled** execution
+- **Webhook support** for external triggers
 
-## Deploy to Vercel
+### User Experience
+- **Dynamic variables** with `{{variable}}` syntax
+- **Node configuration panel** with form validation
+- **Execution history** with detailed logs
+- **Onboarding tooltips** for new users
+- **Real-time status updates**
 
-Vercel deployment will guide you through creating a Supabase account and project.
+## 🎯 Quick Start
 
-After installation of the Supabase integration, all relevant environment variables will be assigned to the project so the deployment is fully functioning.
+### 1. Installation
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fvercel%2Fnext.js%2Ftree%2Fcanary%2Fexamples%2Fwith-supabase&project-name=nextjs-with-supabase&repository-name=nextjs-with-supabase&demo-title=nextjs-with-supabase&demo-description=This+starter+configures+Supabase+Auth+to+use+cookies%2C+making+the+user%27s+session+available+throughout+the+entire+Next.js+app+-+Client+Components%2C+Server+Components%2C+Route+Handlers%2C+Server+Actions+and+Middleware.&demo-url=https%3A%2F%2Fdemo-nextjs-with-supabase.vercel.app%2F&external-id=https%3A%2F%2Fgithub.com%2Fvercel%2Fnext.js%2Ftree%2Fcanary%2Fexamples%2Fwith-supabase&demo-image=https%3A%2F%2Fdemo-nextjs-with-supabase.vercel.app%2Fopengraph-image.png)
+```bash
+npm install
+```
 
-The above will also clone the Starter kit to your GitHub, you can clone that locally and develop locally.
+### 2. Environment Variables
 
-If you wish to just develop locally and not deploy to Vercel, [follow the steps below](#clone-and-run-locally).
+Copy `.env.example` to `.env.local` and configure:
 
-## Clone and run locally
+```env
+# Supabase (Required)
+NEXT_PUBLIC_SUPABASE_URL=your_supabase_url
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your_anon_key
+SUPABASE_SERVICE_ROLE_KEY=your_service_role_key
 
-1. You'll first need a Supabase project which can be made [via the Supabase dashboard](https://database.new)
+# External Services (Optional)
+RESEND_API_KEY=your_resend_api_key           # For email nodes
+OPENWEATHER_API_KEY=your_openweather_api_key # For weather nodes
+ANTHROPIC_API_KEY=your_anthropic_api_key     # For AI nodes
+```
 
-2. Create a Next.js app using the Supabase Starter template npx command
+### 3. Start Development Server
 
-   ```bash
-   npx create-next-app --example with-supabase with-supabase-app
-   ```
+```bash
+npm run dev
+```
 
-   ```bash
-   yarn create next-app --example with-supabase with-supabase-app
-   ```
+### 4. Access the App
 
-   ```bash
-   pnpm create next-app --example with-supabase with-supabase-app
-   ```
+Navigate to `http://localhost:3000`
 
-3. Use `cd` to change into the app's directory
+1. Sign up / Login
+2. Go to `/protected/workflows`
+3. Click "New Workflow"
+4. Start building!
 
-   ```bash
-   cd with-supabase-app
-   ```
+## 📚 Node Types
 
-4. Rename `.env.example` to `.env.local` and update the following:
+### Triggers (Blue)
+- **⏰ Schedule Trigger**: Run workflows on a cron schedule
+- **🔗 Webhook Trigger**: Start workflows via HTTP webhooks
 
-  ```env
-  NEXT_PUBLIC_SUPABASE_URL=[INSERT SUPABASE PROJECT URL]
-  NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=[INSERT SUPABASE PROJECT API PUBLISHABLE OR ANON KEY]
-  ```
-  > [!NOTE]
-  > This example uses `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`, which refers to Supabase's new **publishable** key format.
-  > Both legacy **anon** keys and new **publishable** keys can be used with this variable name during the transition period. Supabase's dashboard may show `NEXT_PUBLIC_SUPABASE_ANON_KEY`; its value can be used in this example.
-  > See the [full announcement](https://github.com/orgs/supabase/discussions/29260) for more information.
+### Data Sources (Green)
+- **🌤️ Weather Data**: Fetch weather information for any city
+- **🐙 GitHub Data**: Get commits, issues, or pull requests
 
-  Both `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` can be found in [your Supabase project's API settings](https://supabase.com/dashboard/project/_?showConnect=true)
+### Actions (Purple)
+- **📧 Send Email**: Send emails with dynamic templates
+- **🌐 HTTP Request**: Make HTTP requests to external APIs
 
-5. You can now run the Next.js local development server:
+### Logic (Orange)
+- **🤖 AI Summarizer**: Summarize text using Claude AI
+- **🔄 Transform Data**: Manipulate data (uppercase, lowercase, extract numbers)
 
-   ```bash
-   npm run dev
-   ```
+## 💡 Example Workflows
 
-   The starter kit should now be running on [localhost:3000](http://localhost:3000/).
+### Daily Weather Briefing
+```
+Schedule (9am) → Weather Data → Send Email
+```
 
-6. This template comes with the default shadcn/ui style initialized. If you instead want other ui.shadcn styles, delete `components.json` and [re-install shadcn/ui](https://ui.shadcn.com/docs/installation/next)
+### GitHub Weekly Digest
+```
+Schedule (Monday) → GitHub Data → AI Summarizer → Send Email
+```
 
-> Check out [the docs for Local Development](https://supabase.com/docs/guides/getting-started/local-development) to also run Supabase locally.
+### HTTP API Monitor
+```
+Schedule (hourly) → HTTP Request → Transform → Send Email (if error)
+```
 
-## Feedback and issues
+## 📖 Documentation
 
-Please file feedback and issues over on the [Supabase GitHub org](https://github.com/supabase/supabase/issues/new/choose).
+- **[QUICK_START.md](./QUICK_START.md)** - Step-by-step user guide
+- **[WORKFLOW_BUILDER.md](./WORKFLOW_BUILDER.md)** - Complete feature documentation
+- **[IMPLEMENTATION_SUMMARY.md](./IMPLEMENTATION_SUMMARY.md)** - Technical details
 
-## More Supabase examples
+## 🎨 UI Components
 
-- [Next.js Subscription Payments Starter](https://github.com/vercel/nextjs-subscription-payments)
-- [Cookie-based Auth and the Next.js 13 App Router (free course)](https://youtube.com/playlist?list=PL5S4mPUpp4OtMhpnp93EFSo42iQ40XjbF)
-- [Supabase Auth and the Next.js App Router](https://github.com/supabase/supabase/tree/master/examples/auth/nextjs)
+### Pages
+- `/protected/workflows` - Workflow dashboard
+- `/protected/workflows/[id]` - Workflow editor canvas
+- `/protected/workflows/[id]/executions` - Execution history
+- `/protected/executions/[id]` - Execution details
+
+### Components
+- `WorkflowCanvas` - Main React Flow canvas
+- `CustomNode` - Animated node component
+- `NodeLibrary` - Searchable node picker
+- `NodeConfigPanel` - Configuration side panel
+- `WorkflowList` - Dashboard with workflow cards
+
+## 🔧 Tech Stack
+
+- **Frontend**: Next.js 15, React 19
+- **Canvas**: React Flow
+- **State**: Zustand
+- **Animation**: Framer Motion
+- **Styling**: Tailwind CSS
+- **Components**: Shadcn UI + Aceternity UI
+- **Backend**: Next.js API Routes
+- **Database**: Supabase
+- **Queue**: Upstash Redis
+
+## 🚀 Deployment
+
+### Deploy to Vercel
+
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fyour-repo)
+
+### Environment Variables
+
+Make sure to set all required environment variables in your Vercel project settings.
+
+## 📝 Dynamic Variables
+
+Use `{{variable}}` syntax to reference data from previous nodes:
+
+```
+Subject: Weather in {{city}}
+Body: Current temperature: {{temperature}}°C
+Conditions: {{description}}
+```
+
+## 🛠️ Development
+
+### Commands
+
+```bash
+npm run dev          # Start development server
+npm run build        # Build for production
+npm run start        # Start production server
+npm run help         # Show dev commands
+```
+
+### Project Structure
+
+```
+├── app/
+│   ├── api/                    # API routes
+│   └── protected/
+│       ├── workflows/          # Workflow pages
+│       └── executions/         # Execution pages
+├── components/
+│   ├── ui/                     # Shadcn components
+│   └── workflow/               # Workflow components
+├── lib/
+│   ├── execution/              # Execution engine
+│   ├── workflow/               # Types & state
+│   └── supabase/               # Supabase client
+└── scripts/                    # Helper scripts
+```
+
+## 🤝 Contributing
+
+Contributions are welcome! Please read the documentation first.
+
+## 📄 License
+
+MIT
+
+## 🙏 Acknowledgments
+
+- [React Flow](https://reactflow.dev/) for the canvas
+- [Shadcn UI](https://ui.shadcn.com/) for components
+- [Aceternity UI](https://ui.aceternity.com/) for enhanced components
+- [Supabase](https://supabase.com/) for backend services
+
+---
+
+**Built with ❤️ using Next.js, React Flow, and Supabase**

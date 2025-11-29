@@ -29,6 +29,10 @@ export function SignUpForm({
 
   const handleSignUp = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    // Add this temporary debug line
+    console.log("Supabase URL:", process.env.NEXT_PUBLIC_SUPABASE_URL);
+
     const supabase = createClient();
     setIsLoading(true);
     setError(null);

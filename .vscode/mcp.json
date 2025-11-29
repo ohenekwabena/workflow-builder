@@ -1,0 +1,24 @@
+{
+  "servers": {
+    "supabase": {
+      "type": "http",
+      "url": "https://mcp.supabase.com/mcp"
+    },
+    "aceternityui": {
+      "command": "fnm",
+      "args": ["exec", "--using", "default", "--", "npx", "aceternityui-mcp"]
+    },
+    "Figma": {
+      "type": "http",
+      "url": "https://mcp.figma.com/mcp"
+    },
+    "motion": {
+      "command": "fnm",
+      "args": ["exec", "--using", "default", "--", "npx", "-y", "motion-ai"]
+    },
+    "shadcn": {
+      "command": "fnm",
+      "args": ["exec", "--using", "default", "--", "npx", "shadcn@latest", "mcp"]
+    }
+  }
+}

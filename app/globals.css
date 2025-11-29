@@ -66,3 +66,36 @@
     @apply bg-background text-foreground;
   }
 }
+
+/* React Flow Custom Styles */
+.react-flow__node {
+  cursor: pointer;
+}
+
+.react-flow__handle {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  border: 2px solid white;
+}
+
+.react-flow__handle-connecting {
+  background: #3b82f6;
+}
+
+.react-flow__edge-path {
+  stroke-width: 2;
+}
+
+.react-flow__edge.selected .react-flow__edge-path {
+  stroke: #3b82f6;
+  stroke-width: 3;
+}
+
+.react-flow__controls {
+  box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+}
+
+.react-flow__minimap {
+  box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+}
