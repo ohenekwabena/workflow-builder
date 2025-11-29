@@ -202,10 +202,30 @@ export const httpRequestHandler: NodeHandler = {
       body: processedBody,
     });
 
-    const data = await response.json();
+    if (!response.ok) {
+      throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+    }
+
+    // Try to parse as JSON, fall back to text if it fails
+    const contentType = response.headers.get("content-type") || "";
+    let data;
+
+    if (contentType.includes("application/json")) {
+      try {
+        data = await response.json();
+      } catch (error) {
+        // If JSON parsing fails, get text instead
+        data = await response.text();
+      }
+    } else {
+      // Non-JSON response, return as text
+      data = await response.text();
+    }
 
     return {
       status: response.status,
+      statusText: response.statusText,
+      contentType: contentType,
       data,
     };
   },
