@@ -58,7 +58,7 @@ export const WORKFLOW_TEMPLATES: WorkflowTemplate[] = [
           config: {
             to: "user@example.com",
             subject: "Your Daily Weather Report",
-            body: "Temperature: {{temperature}}°C\nConditions: {{conditions}}",
+            body: "<h2>Daily Weather Report</h2><p>Temperature: {{temperature}}°C</p><p>Conditions: {{conditions}}</p>",
           },
           category: "action",
           icon: "📧",
@@ -174,7 +174,7 @@ export const WORKFLOW_TEMPLATES: WorkflowTemplate[] = [
           config: {
             to: "subscribers@example.com",
             subject: "Your Weekly Tech Newsletter",
-            body: "{{content}}",
+            body: "<div style='font-family: Arial, sans-serif;'><h2>Weekly Tech Newsletter</h2><div>{{content}}</div></div>",
           },
           category: "action",
           icon: "📧",

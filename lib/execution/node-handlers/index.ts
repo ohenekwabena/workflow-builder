@@ -122,7 +122,7 @@ export const emailActionHandler: NodeHandler = {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        from: "workflows@notifications.ohenekwabena.xyz",
+        from: "Workflow Notifications <workflows@notifications.ohenekwabena.xyz>",
         to,
         subject: processedSubject,
         html: processedBody,
