@@ -268,16 +268,50 @@ export const transformHandler: NodeHandler = {
   execute: async (config, input, context) => {
     const { transformType, field } = config;
 
+    console.log("Transform handler - config:", JSON.stringify(config));
+    console.log("Transform handler - input:", JSON.stringify(input));
+
+    if (!field) {
+      throw new Error("Transform node requires a 'field' configuration");
+    }
+
+    if (!transformType) {
+      throw new Error("Transform node requires a 'transformType' configuration");
+    }
+
+    // Navigate nested paths (e.g., "payload.message")
+    const getNestedValue = (obj: any, path: string) => {
+      return path.split(".").reduce((current, key) => current?.[key], obj);
+    };
+
+    const value = getNestedValue(input, field);
+
+    if (value === undefined || value === null) {
+      throw new Error(`Field "${field}" not found in input data. Available fields: ${Object.keys(input).join(", ")}`);
+    }
+
+    let result;
     switch (transformType) {
       case "uppercase":
-        return { result: input[field]?.toString().toUpperCase() };
+        result = value.toString().toUpperCase();
+        break;
       case "lowercase":
-        return { result: input[field]?.toString().toLowerCase() };
+        result = value.toString().toLowerCase();
+        break;
       case "extract_number":
-        return { result: parseFloat(input[field]) };
+        result = parseFloat(value);
+        break;
       default:
-        return input;
+        throw new Error(`Unknown transform type: ${transformType}`);
     }
+
+    console.log("Transform handler - result:", result);
+
+    return {
+      result,
+      original: value,
+      transformType,
+    };
   },
 };
 

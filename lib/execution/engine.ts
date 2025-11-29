@@ -74,6 +74,10 @@ export class WorkflowExecutionEngine {
     const node = this.nodes.find((n) => n.id === nodeId);
     if (!node) throw new Error(`Node ${nodeId} not found`);
 
+    console.log(`\n=== Executing Node ${nodeId} ===`);
+    console.log("Node type:", node.data.nodeType);
+    console.log("Node config:", JSON.stringify(node.data.config));
+
     const startTime = Date.now();
 
     // Create execution step record
@@ -93,6 +97,8 @@ export class WorkflowExecutionEngine {
       // Get input from previous nodes
       const input = this.getNodeInput(nodeId, triggerInput);
 
+      console.log("Node input:", JSON.stringify(input));
+
       // Find handler for this node type
       const handler = NODE_HANDLERS[node.data.nodeType];
       if (!handler) {
@@ -109,6 +115,8 @@ export class WorkflowExecutionEngine {
       };
 
       const output = await handler.execute(node.data.config, input, context);
+
+      console.log("Node output:", JSON.stringify(output));
 
       // Store output for next nodes
       this.nodeOutputs[nodeId] = output;

@@ -77,28 +77,28 @@ export default function WorkflowExecutionsPage() {
   }
 
   return (
-    <div className="container mx-auto py-8 px-4">
+    <div className="container mx-auto py-4 sm:py-8 px-2 sm:px-4">
       {/* Header */}
-      <div className="flex items-center gap-4 mb-8">
+      <div className="flex items-center gap-2 sm:gap-4 mb-4 sm:mb-8">
         <Button variant="ghost" size="icon" onClick={() => router.push(`/protected/workflows/${workflowId}`)}>
-          <ArrowLeft className="w-5 h-5" />
+          <ArrowLeft className="w-4 h-4 sm:w-5 sm:h-5" />
         </Button>
         <div>
-          <h1 className="text-3xl font-bold">Workflow Executions</h1>
-          <p className="text-gray-500 mt-1">View execution history and results</p>
+          <h1 className="text-xl sm:text-3xl font-bold">Workflow Executions</h1>
+          <p className="text-xs sm:text-base text-gray-500 mt-1">View execution history and results</p>
         </div>
       </div>
 
       {/* Executions List */}
       {executions.length === 0 ? (
-        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="text-center py-20">
-          <div className="text-6xl mb-4">📊</div>
-          <h3 className="text-2xl font-bold mb-2">No executions yet</h3>
-          <p className="text-gray-500 mb-6">Run your workflow to see execution history here</p>
+        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="text-center py-12 sm:py-20 px-4">
+          <div className="text-4xl sm:text-6xl mb-4">📊</div>
+          <h3 className="text-xl sm:text-2xl font-bold mb-2">No executions yet</h3>
+          <p className="text-sm sm:text-base text-gray-500 mb-6">Run your workflow to see execution history here</p>
           <Button onClick={() => router.push(`/protected/workflows/${workflowId}`)}>Go to Workflow</Button>
         </motion.div>
       ) : (
-        <div className="space-y-4">
+        <div className="space-y-3 sm:space-y-4">
           {executions.map((execution, index) => (
             <motion.div
               key={execution.id}
@@ -107,20 +107,20 @@ export default function WorkflowExecutionsPage() {
               transition={{ delay: index * 0.05 }}
             >
               <Card
-                className="p-6 hover:shadow-lg transition-shadow cursor-pointer"
+                className="p-4 sm:p-6 hover:shadow-lg transition-shadow cursor-pointer"
                 onClick={() => router.push(`/protected/executions/${execution.id}`)}
               >
-                <div className="flex items-start justify-between">
+                <div className="flex flex-col sm:flex-row items-start justify-between gap-3 sm:gap-0">
                   {/* Left side */}
-                  <div className="flex items-start gap-4 flex-1">
+                  <div className="flex items-start gap-3 sm:gap-4 flex-1 w-full">
                     <div className="mt-1">{getStatusIcon(execution.status)}</div>
-                    <div className="flex-1">
-                      <div className="flex items-center gap-3 mb-2">
-                        <h3 className="font-semibold">Execution #{execution.id.slice(0, 8)}</h3>
+                    <div className="flex-1 min-w-0">
+                      <div className="flex flex-wrap items-center gap-2 sm:gap-3 mb-2">
+                        <h3 className="font-semibold text-sm sm:text-base truncate">Execution #{execution.id.slice(0, 8)}</h3>
                         {getStatusBadge(execution.status)}
                       </div>
 
-                      <div className="space-y-1 text-sm text-gray-600 dark:text-gray-400">
+                      <div className="space-y-1 text-xs sm:text-sm text-gray-600 dark:text-gray-400">
                         <div className="flex items-center gap-2">
                           <span className="text-gray-500">Trigger:</span>
                           <span className="capitalize">{execution.trigger_type}</span>
@@ -129,7 +129,7 @@ export default function WorkflowExecutionsPage() {
                         {execution.started_at && (
                           <div className="flex items-center gap-2">
                             <span className="text-gray-500">Started:</span>
-                            <span>{format(new Date(execution.started_at), "PPp")}</span>
+                            <span className="truncate">{format(new Date(execution.started_at), "PPp")}</span>
                           </div>
                         )}
 
@@ -141,8 +141,8 @@ export default function WorkflowExecutionsPage() {
                         )}
 
                         {execution.error_message && (
-                          <div className="mt-2 p-3 bg-red-50 dark:bg-red-900/20 rounded-lg border border-red-200 dark:border-red-800">
-                            <p className="text-sm text-red-600 dark:text-red-400">{execution.error_message}</p>
+                          <div className="mt-2 p-2 sm:p-3 bg-red-50 dark:bg-red-900/20 rounded-lg border border-red-200 dark:border-red-800">
+                            <p className="text-xs sm:text-sm text-red-600 dark:text-red-400 break-words">{execution.error_message}</p>
                           </div>
                         )}
                       </div>
@@ -150,7 +150,7 @@ export default function WorkflowExecutionsPage() {
                   </div>
 
                   {/* Right side */}
-                  <div className="text-right text-sm text-gray-500">
+                  <div className="text-left sm:text-right text-xs sm:text-sm text-gray-500 w-full sm:w-auto">
                     {execution.started_at && (
                       <span>
                         {formatDistanceToNow(new Date(execution.started_at), {
