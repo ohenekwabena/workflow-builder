@@ -133,7 +133,7 @@ export function WorkflowCanvas() {
               className="gap-1 sm:gap-2 text-xs sm:text-sm h-8 sm:h-9 px-2 sm:px-3"
             >
               <Plus className="w-3 h-3 sm:w-4 sm:h-4" />
-              <span className="hidden xs:inline">Add Node</span>
+              <span className="hidden md:inline">Add Node</span>
             </Button>
 
             <div className="w-px h-6 bg-gray-300 dark:bg-gray-600" />

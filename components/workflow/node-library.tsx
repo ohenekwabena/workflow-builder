@@ -128,7 +128,7 @@ export function NodeLibrary({ onClose }: NodeLibraryProps) {
                 }`}
               >
                 <span className="text-sm sm:text-base">{category.icon}</span>
-                <span className="hidden xs:inline">{category.label}</span>
+                <span className="hidden sm:inline">{category.label}</span>
               </button>
             ))}
           </div>

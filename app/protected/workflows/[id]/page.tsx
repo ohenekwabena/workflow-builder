@@ -215,7 +215,7 @@ export default function WorkflowEditorPage() {
             } shrink-0 text-xs sm:text-sm h-8 sm:h-9`}
           >
             <Power className="w-3 h-3 sm:w-4 sm:h-4" />
-            <span className="hidden xs:inline">{workflow?.is_active ? "Active" : "Inactive"}</span>
+            <span className="hidden sm:inline">{workflow?.is_active ? "Active" : "Inactive"}</span>
           </Button>
 
           <Button

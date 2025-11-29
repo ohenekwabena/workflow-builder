@@ -62,7 +62,7 @@ export function TemplateLibraryModal({ onClose, onSelectTemplate }: TemplateLibr
               <Sparkles className="w-5 h-5 sm:w-6 sm:h-6 text-purple-600" />
               <div>
                 <h2 className="text-xl sm:text-2xl font-bold">Workflow Templates</h2>
-                <p className="text-xs sm:text-sm text-gray-500 mt-1 hidden xs:block">Start with a pre-built workflow</p>
+                <p className="text-xs sm:text-sm text-gray-500 mt-1 hidden md:block">Start with a pre-built workflow</p>
               </div>
             </div>
             <button
@@ -111,7 +111,7 @@ export function TemplateLibraryModal({ onClose, onSelectTemplate }: TemplateLibr
                   }`}
                 >
                   <span className="text-sm sm:text-base">{category.icon}</span>
-                  <span className="hidden xs:inline">{category.label}</span>
+                  <span className="hidden md:inline">{category.label}</span>
                 </button>
               ))}
             </div>
@@ -159,9 +159,9 @@ export function TemplateLibraryModal({ onClose, onSelectTemplate }: TemplateLibr
           </div>
 
           {/* Footer */}
-          <div className="px-4 sm:px-6 py-3 sm:py-4 border-t border-gray-200 dark:border-gray-700 flex flex-col xs:flex-row justify-between items-center gap-2">
+          <div className="px-4 sm:px-6 py-3 sm:py-4 border-t border-gray-200 dark:border-gray-700 flex flex-col md:flex-row justify-between items-center gap-2">
             <p className="text-xs sm:text-sm text-gray-500">{filteredTemplates.length} templates available</p>
-            <Button variant="outline" onClick={onClose} size="sm" className="w-full xs:w-auto">
+            <Button variant="outline" onClick={onClose} size="sm" className="w-full md:w-auto">
               Close
             </Button>
           </div>
