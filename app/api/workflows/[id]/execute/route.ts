@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { cookies } from "next/headers";
 import { createClient, supabaseAdmin } from "@/lib/supabase/server";
-import { enqueueWorkflow } from "@/lib/queue";
+import { executeWorkflow } from "@/lib/execution/engine";
 
 // POST /api/workflows/[id]/execute - Trigger workflow execution
 export async function POST(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
@@ -38,7 +38,7 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
       .insert({
         workflow_id: workflow.id,
         user_id: user.id,
-        status: "queued",
+        status: "running",
         trigger_type: "manual",
       })
       .select()
@@ -46,19 +46,21 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
 
     if (executionError) throw executionError;
 
-    // Enqueue for background processing
-    await enqueueWorkflow({
+    // Execute immediately (non-blocking)
+    executeWorkflow({
       executionId: execution.id,
       workflowId: workflow.id,
       userId: user.id,
       nodes: workflow.nodes,
       edges: workflow.edges,
       triggerInput,
+    }).catch((error) => {
+      console.error("Workflow execution error:", error);
     });
 
     return NextResponse.json({
       execution_id: execution.id,
-      status: "queued",
+      status: "running",
       message: "Workflow execution started",
     });
   } catch (error: any) {

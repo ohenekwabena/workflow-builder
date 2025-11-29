@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { X, ArrowRight } from "lucide-react";
+import { X, ArrowDown } from "lucide-react";
 import { ExecutionStatusBadge } from "./execution-status-badge";
 import { getRealtimeSubscription, ExecutionUpdate, StepUpdate } from "@/lib/execution/realtime";
 import { Button } from "@/components/ui/button";
@@ -148,7 +148,7 @@ export function LiveExecutionPanel({ executionId, workflowNodes, onClose }: Live
 
                   {index < workflowNodes.length - 1 && (
                     <div className="flex justify-center py-2">
-                      <ArrowRight className="w-4 h-4 text-gray-400" />
+                      <ArrowDown className="w-4 h-4 text-gray-400" />
                     </div>
                   )}
                 </motion.div>
