@@ -222,3 +222,23 @@ export class WorkflowExecutionEngine {
     await supabaseAdmin().from("workflow_executions").update(updateData).eq("id", this.executionId);
   }
 }
+
+// Helper function to execute a workflow
+export async function executeWorkflow({
+  executionId,
+  workflowId,
+  userId,
+  nodes,
+  edges,
+  triggerInput,
+}: {
+  executionId: string;
+  workflowId: string;
+  userId: string;
+  nodes: WorkflowNode[];
+  edges: WorkflowEdge[];
+  triggerInput: any;
+}) {
+  const engine = new WorkflowExecutionEngine(executionId, workflowId, userId, nodes, edges);
+  return await engine.execute(triggerInput);
+}
