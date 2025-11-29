@@ -58,7 +58,7 @@ export const WORKFLOW_TEMPLATES: WorkflowTemplate[] = [
           config: {
             to: "user@example.com",
             subject: "Your Daily Weather Report",
-            body: "<h2>Daily Weather Report</h2><p>Temperature: {{temperature}}°C</p><p>Conditions: {{conditions}}</p>",
+            body: "<h2>Daily Weather Report</h2><p>Temperature: {{temperature}}°C</p><p>Conditions: {{description}}</p>",
           },
           category: "action",
           icon: "📧",

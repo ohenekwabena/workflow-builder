@@ -114,6 +114,43 @@ export const emailActionHandler: NodeHandler = {
     const processedBody = replaceTemplateVars(body, input);
     const processedSubject = replaceTemplateVars(subject, input);
 
+    // Wrap body in styled email template
+    const styledHtml = `
+      <!DOCTYPE html>
+      <html>
+        <head>
+          <meta charset="utf-8">
+          <meta name="viewport" content="width=device-width, initial-scale=1.0">
+          <style>
+            body { margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; }
+            .email-container { max-width: 600px; margin: 0 auto; background-color: #ffffff; }
+            .email-header { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 30px 20px; text-align: center; }
+            .email-header h1 { color: #ffffff; margin: 0; font-size: 24px; font-weight: 600; }
+            .email-body { padding: 40px 30px; color: #374151; line-height: 1.6; }
+            .email-footer { background-color: #f9fafb; padding: 20px 30px; text-align: center; font-size: 12px; color: #6b7280; border-top: 1px solid #e5e7eb; }
+            h2 { color: #1f2937; margin-top: 0; }
+            p { margin: 12px 0; }
+            a { color: #667eea; text-decoration: none; }
+            .button { display: inline-block; padding: 12px 24px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: #ffffff; text-decoration: none; border-radius: 6px; font-weight: 500; margin: 20px 0; }
+          </style>
+        </head>
+        <body>
+          <div class="email-container">
+            <div class="email-header">
+              <h1>🔄 Workflow Notification</h1>
+            </div>
+            <div class="email-body">
+              ${processedBody}
+            </div>
+            <div class="email-footer">
+              <p>This email was sent by your automated workflow.</p>
+              <p style="margin-top: 8px;">Powered by Workflow Builder</p>
+            </div>
+          </div>
+        </body>
+      </html>
+    `;
+
     // Send via Resend
     const response = await fetch("https://api.resend.com/emails", {
       method: "POST",
@@ -125,7 +162,7 @@ export const emailActionHandler: NodeHandler = {
         from: "Workflow Notifications <workflows@notifications.ohenekwabena.xyz>",
         to,
         subject: processedSubject,
-        html: processedBody,
+        html: styledHtml,
       }),
     });
 
