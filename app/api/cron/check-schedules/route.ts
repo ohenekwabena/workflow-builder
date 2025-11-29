@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { supabaseAdmin } from "@/lib/supabase/server";
 import { enqueueWorkflow } from "@/lib/queue";
+import { CronExpressionParser } from "cron-parser";
 
 // This endpoint checks for workflows with schedule triggers and executes them
 export async function GET(request: NextRequest) {
@@ -33,13 +34,27 @@ export async function GET(request: NextRequest) {
           console.log(`  Checking workflow: ${workflow.name}`);
           console.log(`    Schedule: ${schedule}`);
 
-          // Check if we already executed this in the last 60 seconds
+          // Parse cron expression and check if it should run now
+          const interval = CronExpressionParser.parse(schedule);
+          const nextRun = interval.prev().toDate();
+          const now = new Date();
+
+          // Check if the next scheduled time is within the last minute
+          const timeDiff = now.getTime() - nextRun.getTime();
+          const shouldRun = timeDiff >= 0 && timeDiff < 60000; // Within last 60 seconds
+
+          if (!shouldRun) {
+            console.log(`    ⏭️  Skipping - not scheduled to run now (next: ${nextRun.toISOString()})`);
+            continue;
+          }
+
+          // Check if we already executed this in the last 90 seconds (buffer for timing)
           const { data: recentExecution } = await supabaseAdmin()
             .from("workflow_executions")
             .select("id, created_at")
             .eq("workflow_id", workflow.id)
             .eq("trigger_type", "schedule")
-            .gte("created_at", new Date(now.getTime() - 60000).toISOString()) // Last 60 seconds
+            .gte("created_at", new Date(now.getTime() - 90000).toISOString()) // Last 90 seconds
             .order("created_at", { ascending: false })
             .limit(1)
             .single();

@@ -96,7 +96,7 @@ export function ScheduleTriggerModal({ workflowId, currentSchedule, onClose, onS
           animate={{ scale: 1, opacity: 1, y: 0 }}
           exit={{ scale: 0.9, opacity: 0, y: 20 }}
           transition={{ type: "spring", damping: 25, stiffness: 300 }}
-          className="w-full max-w-2xl bg-white dark:bg-gray-900 rounded-2xl shadow-2xl overflow-hidden mx-4"
+          className="w-full max-w-2xl max-h-[90vh] bg-white dark:bg-gray-900 rounded-2xl shadow-2xl overflow-hidden mx-4 flex flex-col"
           onClick={(e) => e.stopPropagation()}
         >
           {/* Header */}
@@ -117,7 +117,7 @@ export function ScheduleTriggerModal({ workflowId, currentSchedule, onClose, onS
           </div>
 
           {/* Content */}
-          <div className="p-6 space-y-6">
+          <div className="p-6 space-y-6 overflow-y-auto flex-1">
             {/* Cron Expression Input */}
             <div className="space-y-2">
               <Label htmlFor="cron">Cron Expression</Label>
@@ -187,7 +187,7 @@ export function ScheduleTriggerModal({ workflowId, currentSchedule, onClose, onS
           </div>
 
           {/* Footer */}
-          <div className="px-6 py-4 border-t border-gray-200 dark:border-gray-700 flex justify-end gap-2">
+          <div className="px-6 py-4 border-t border-gray-200 dark:border-gray-700 flex justify-end gap-2 flex-shrink-0">
             <Button variant="outline" onClick={onClose}>
               Cancel
             </Button>
