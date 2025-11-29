@@ -6,6 +6,7 @@
     "start": "next start",
     "lint": "eslint .",
     "test:workflow": "npx tsx scripts/test-workflow.ts",
+    "process-queue": "npx tsx scripts/process-queue.ts",
     "help": "node scripts/dev-helper.js"
   },
   "dependencies": {
@@ -33,6 +34,7 @@
     "cron-parser": "^5.4.0",
     "cronstrue": "^3.9.0",
     "date-fns": "^4.1.0",
+    "dotenv": "^17.2.3",
     "framer-motion": "^12.23.24",
     "lucide-react": "^0.511.0",
     "motion": "^12.23.24",

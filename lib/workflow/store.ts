@@ -27,7 +27,7 @@ interface WorkflowStore {
   setSelectedNode: (node: WorkflowNode | null) => void;
   setShowNodePanel: (show: boolean) => void;
   saveWorkflow: () => Promise<void>;
-  executeWorkflow: () => Promise<void>;
+  executeWorkflow: () => Promise<{ execution_id: string; status: string; message: string }>;
   resetWorkflow: () => void;
 }
 
@@ -77,8 +77,14 @@ export const useWorkflowStore = create<WorkflowStore>((set, get) => ({
   },
 
   updateNodeConfig: (nodeId, config) => {
+    const updatedNodes = get().nodes.map((node) =>
+      node.id === nodeId ? { ...node, data: { ...node.data, config } } : node
+    );
+    const updatedSelectedNode = updatedNodes.find((n) => n.id === nodeId);
+
     set({
-      nodes: get().nodes.map((node) => (node.id === nodeId ? { ...node, data: { ...node.data, config } } : node)),
+      nodes: updatedNodes,
+      selectedNode: get().selectedNode?.id === nodeId ? updatedSelectedNode || null : get().selectedNode,
     });
   },
 
@@ -128,7 +134,9 @@ export const useWorkflowStore = create<WorkflowStore>((set, get) => ({
 
   executeWorkflow: async () => {
     const { workflow } = get();
-    if (!workflow) return;
+    if (!workflow) {
+      throw new Error("No workflow loaded");
+    }
 
     set({ isExecuting: true });
 
@@ -136,11 +144,16 @@ export const useWorkflowStore = create<WorkflowStore>((set, get) => ({
       const response = await fetch(`/api/workflows/${workflow.id}/execute`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ input: {} }),
       });
 
-      if (!response.ok) throw new Error("Failed to execute workflow");
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.error || "Failed to execute workflow");
+      }
 
       const data = await response.json();
+      console.log("Workflow execution response:", data);
       return data;
     } catch (error) {
       console.error("Failed to execute workflow:", error);

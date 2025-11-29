@@ -1,11 +1,18 @@
 import { Redis } from "@upstash/redis";
 
-const redis = new Redis({
-  url: process.env.UPSTASH_REDIS_REST_URL!,
-  token: process.env.UPSTASH_REDIS_REST_TOKEN!,
-});
-
 const QUEUE_KEY = "workflow:executions:queue";
+
+// Create Redis client lazily to ensure env vars are loaded
+function getRedisClient() {
+  if (!process.env.UPSTASH_REDIS_REST_URL || !process.env.UPSTASH_REDIS_REST_TOKEN) {
+    throw new Error("Redis credentials not configured. Please set UPSTASH_REDIS_REST_URL and UPSTASH_REDIS_REST_TOKEN");
+  }
+
+  return new Redis({
+    url: process.env.UPSTASH_REDIS_REST_URL,
+    token: process.env.UPSTASH_REDIS_REST_TOKEN,
+  });
+}
 
 export interface QueuedWorkflow {
   executionId: string;
@@ -18,6 +25,7 @@ export interface QueuedWorkflow {
 }
 
 export async function enqueueWorkflow(job: Omit<QueuedWorkflow, "enqueuedAt">) {
+  const redis = getRedisClient();
   const queuedJob: QueuedWorkflow = {
     ...job,
     enqueuedAt: new Date().toISOString(),
@@ -30,13 +38,21 @@ export async function enqueueWorkflow(job: Omit<QueuedWorkflow, "enqueuedAt">) {
 }
 
 export async function dequeueWorkflow(): Promise<QueuedWorkflow | null> {
+  const redis = getRedisClient();
   const result = await redis.lpop(QUEUE_KEY);
 
   if (!result) return null;
 
-  return JSON.parse(result as string);
+  // Handle both string and object responses from Redis
+  if (typeof result === "string") {
+    return JSON.parse(result);
+  }
+
+  // If it's already an object, return it directly
+  return result as QueuedWorkflow;
 }
 
 export async function getQueueLength(): Promise<number> {
+  const redis = getRedisClient();
   return await redis.llen(QUEUE_KEY);
 }

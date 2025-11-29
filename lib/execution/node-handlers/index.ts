@@ -140,6 +140,10 @@ export const httpRequestHandler: NodeHandler = {
   execute: async (config, input, context) => {
     const { url, method = "GET", headers = {}, body } = config;
 
+    if (!url) {
+      throw new Error("HTTP Request node requires a URL");
+    }
+
     const processedUrl = replaceTemplateVars(url, input);
     const processedBody = body ? replaceTemplateVars(JSON.stringify(body), input) : undefined;
 
@@ -173,13 +177,16 @@ export const aiSummarizerHandler: NodeHandler = {
       apiKey: process.env.ANTHROPIC_API_KEY,
     });
 
+    // If textToSummarize is a template, use it; otherwise use the entire input data
+    let textContent = textToSummarize ? replaceTemplateVars(textToSummarize, input) : JSON.stringify(input, null, 2);
+
     const message = await anthropic.messages.create({
       model: "claude-sonnet-4-20250514",
       max_tokens: 1024,
       messages: [
         {
           role: "user",
-          content: `${prompt}\n\nText to summarize:\n${replaceTemplateVars(textToSummarize, input)}`,
+          content: `${prompt}\n\nText to summarize:\n${textContent}`,
         },
       ],
     });
@@ -211,6 +218,9 @@ export const transformHandler: NodeHandler = {
 // ===== HELPER FUNCTIONS =====
 
 function replaceTemplateVars(template: string, data: any): string {
+  if (!template || typeof template !== "string") {
+    return template || "";
+  }
   return template.replace(/\{\{(.+?)\}\}/g, (match, path) => {
     const value = path.split(".").reduce((obj: any, key: string) => obj?.[key], data);
     return value !== undefined ? String(value) : match;

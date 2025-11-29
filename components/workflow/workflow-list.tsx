@@ -113,15 +113,31 @@ export function WorkflowList() {
     e.stopPropagation();
 
     try {
+      console.log("Executing workflow:", id);
+
       const response = await fetch(`/api/workflows/${id}/execute`, {
         method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({}),
       });
 
-      if (!response.ok) throw new Error("Failed to execute workflow");
+      console.log("Response status:", response.status);
+      const data = await response.json();
+      console.log("Response data:", data);
 
-      console.log("Workflow execution started");
+      if (!response.ok) {
+        throw new Error(data.error || "Failed to execute workflow");
+      }
+
+      alert(
+        `Workflow execution started!\n\nExecution ID: ${data.execution_id}\n\nCheck the Executions page to see the results.`
+      );
+
+      // Redirect to executions page
+      router.push(`/protected/executions/${data.execution_id}`);
     } catch (error) {
       console.error("Error executing workflow:", error);
+      alert(`Failed to execute workflow: ${error instanceof Error ? error.message : "Unknown error"}`);
     }
   };
 

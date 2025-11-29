@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { processWorkflowQueue } from "@/lib/queue/worker";
+import { getQueueLength } from "@/lib/queue";
 
 // This endpoint will be called by Vercel Cron or external cron service
 export async function GET(request: NextRequest) {
@@ -10,10 +11,18 @@ export async function GET(request: NextRequest) {
   }
 
   try {
-    // Process one workflow from queue
-    await processWorkflowQueue();
+    const queueLength = await getQueueLength();
+    console.log(`[CRON] Processing queue... ${queueLength} items waiting`);
 
-    return NextResponse.json({ success: true });
+    // Process all queued items (max 10 per cron run to avoid timeout)
+    let processed = 0;
+    while ((await getQueueLength()) > 0 && processed < 10) {
+      await processWorkflowQueue();
+      processed++;
+    }
+
+    console.log(`[CRON] Processed ${processed} workflow executions`);
+    return NextResponse.json({ success: true, processed });
   } catch (error: any) {
     console.error("Cron job error:", error);
     return NextResponse.json({ error: error.message }, { status: 500 });

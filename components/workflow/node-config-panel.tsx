@@ -22,8 +22,10 @@ export function NodeConfigPanel() {
   if (!nodeDefinition) return null;
 
   const handleConfigChange = (fieldName: string, value: any) => {
+    if (!selectedNode) return;
+
     const updatedConfig = {
-      ...selectedNode.data.config,
+      ...(selectedNode.data.config || {}),
       [fieldName]: value,
     };
     updateNodeConfig(selectedNode.id, updatedConfig);
@@ -128,11 +130,17 @@ export function NodeConfigPanel() {
               id="node-label"
               value={selectedNode.data.label}
               onChange={(e) => {
-                const updatedNode = {
-                  ...selectedNode,
-                  data: { ...selectedNode.data, label: e.target.value },
-                };
-                useWorkflowStore.setState({ selectedNode: updatedNode });
+                const newLabel = e.target.value;
+                // Update the node in the nodes array
+                const nodes = useWorkflowStore.getState().nodes;
+                const updatedNodes = nodes.map((node) =>
+                  node.id === selectedNode.id ? { ...node, data: { ...node.data, label: newLabel } } : node
+                );
+                const updatedNode = updatedNodes.find((n) => n.id === selectedNode.id);
+                useWorkflowStore.setState({
+                  nodes: updatedNodes,
+                  selectedNode: updatedNode || null,
+                });
               }}
               placeholder="Enter node label"
             />

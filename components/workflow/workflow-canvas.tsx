@@ -55,11 +55,20 @@ export function WorkflowCanvas() {
 
   const handleExecute = async () => {
     try {
+      console.log("Starting workflow execution...");
       const result = await executeWorkflow();
       console.log("Execution started:", result);
-      // You can add a toast notification here
+
+      // Show success feedback
+      if (result?.execution_id) {
+        alert(
+          `Workflow execution queued!\n\nExecution ID: ${result.execution_id}\n\nThe workflow will be processed in the background. Check the Executions page to see the results.\n\nNote: You need to run the queue processor (npm run process-queue) to execute queued workflows.`
+        );
+      }
     } catch (error) {
       console.error("Failed to execute:", error);
+      const errorMessage = error instanceof Error ? error.message : "Unknown error";
+      alert(`Failed to execute workflow:\n\n${errorMessage}`);
     }
   };
 

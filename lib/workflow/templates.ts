@@ -26,7 +26,7 @@ export const WORKFLOW_TEMPLATES: WorkflowTemplate[] = [
         position: { x: 100, y: 100 },
         data: {
           label: "Daily Trigger",
-          nodeType: "trigger-schedule",
+          nodeType: "trigger:schedule",
           config: {
             schedule: "0 9 * * *",
           },
@@ -40,7 +40,7 @@ export const WORKFLOW_TEMPLATES: WorkflowTemplate[] = [
         position: { x: 100, y: 250 },
         data: {
           label: "Get Weather",
-          nodeType: "data-weather",
+          nodeType: "data:weather",
           config: {
             city: "San Francisco",
           },
@@ -54,7 +54,7 @@ export const WORKFLOW_TEMPLATES: WorkflowTemplate[] = [
         position: { x: 100, y: 400 },
         data: {
           label: "Send Email",
-          nodeType: "action-email",
+          nodeType: "action:email",
           config: {
             to: "user@example.com",
             subject: "Your Daily Weather Report",
@@ -88,7 +88,7 @@ export const WORKFLOW_TEMPLATES: WorkflowTemplate[] = [
         position: { x: 100, y: 100 },
         data: {
           label: "GitHub Webhook",
-          nodeType: "trigger-webhook",
+          nodeType: "trigger:webhook",
           config: {},
           category: "trigger",
           icon: "🪝",
@@ -100,7 +100,7 @@ export const WORKFLOW_TEMPLATES: WorkflowTemplate[] = [
         position: { x: 100, y: 250 },
         data: {
           label: "Transform Data",
-          nodeType: "logic-transform",
+          nodeType: "logic:transform",
           config: {
             template: '{"text": "New issue: {{title}} by {{user}}"}',
           },
@@ -114,7 +114,7 @@ export const WORKFLOW_TEMPLATES: WorkflowTemplate[] = [
         position: { x: 100, y: 400 },
         data: {
           label: "HTTP Request to Slack",
-          nodeType: "action-http",
+          nodeType: "action:http_request",
           config: {
             url: "https://hooks.slack.com/services/YOUR/WEBHOOK/URL",
             method: "POST",
@@ -141,7 +141,7 @@ export const WORKFLOW_TEMPLATES: WorkflowTemplate[] = [
         position: { x: 100, y: 100 },
         data: {
           label: "Weekly Trigger",
-          nodeType: "trigger-schedule",
+          nodeType: "trigger:schedule",
           config: {
             schedule: "0 9 * * 1",
           },
@@ -155,7 +155,7 @@ export const WORKFLOW_TEMPLATES: WorkflowTemplate[] = [
         position: { x: 100, y: 250 },
         data: {
           label: "Generate Content",
-          nodeType: "logic-ai",
+          nodeType: "logic:ai_summarizer",
           config: {
             prompt: "Generate a weekly newsletter about technology trends",
             model: "gpt-4",
@@ -170,7 +170,7 @@ export const WORKFLOW_TEMPLATES: WorkflowTemplate[] = [
         position: { x: 100, y: 400 },
         data: {
           label: "Send Newsletter",
-          nodeType: "action-email",
+          nodeType: "action:email",
           config: {
             to: "subscribers@example.com",
             subject: "Your Weekly Tech Newsletter",
@@ -197,7 +197,7 @@ export const WORKFLOW_TEMPLATES: WorkflowTemplate[] = [
         position: { x: 100, y: 100 },
         data: {
           label: "Hourly Trigger",
-          nodeType: "trigger-schedule",
+          nodeType: "trigger:schedule",
           config: {
             schedule: "0 * * * *",
           },
@@ -211,7 +211,7 @@ export const WORKFLOW_TEMPLATES: WorkflowTemplate[] = [
         position: { x: 100, y: 250 },
         data: {
           label: "Fetch Data",
-          nodeType: "action-http",
+          nodeType: "action:http_request",
           config: {
             url: "https://api.example.com/data",
             method: "GET",
@@ -226,7 +226,7 @@ export const WORKFLOW_TEMPLATES: WorkflowTemplate[] = [
         position: { x: 100, y: 400 },
         data: {
           label: "Transform",
-          nodeType: "logic-transform",
+          nodeType: "logic:transform",
           config: {
             template: '{"records": {{data}}}',
           },
@@ -240,7 +240,7 @@ export const WORKFLOW_TEMPLATES: WorkflowTemplate[] = [
         position: { x: 100, y: 550 },
         data: {
           label: "Sync to Destination",
-          nodeType: "action-http",
+          nodeType: "action:http_request",
           config: {
             url: "https://destination.example.com/sync",
             method: "POST",

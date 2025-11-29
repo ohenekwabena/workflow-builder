@@ -12,14 +12,23 @@ export async function processWorkflowQueue() {
   }
 
   console.log(`Processing workflow execution: ${job.executionId}`);
+  console.log(`  Workflow ID: ${job.workflowId}`);
+  console.log(`  Nodes: ${job.nodes.length}`);
+  console.log(`  Edges: ${job.edges.length}`);
 
   try {
     const engine = new WorkflowExecutionEngine(job.executionId, job.workflowId, job.userId, job.nodes, job.edges);
 
-    await engine.execute(job.triggerInput);
+    const result = await engine.execute(job.triggerInput);
 
-    console.log(`✅ Workflow execution completed: ${job.executionId}`);
+    if (result.success) {
+      console.log(`✅ Workflow execution completed successfully: ${job.executionId}`);
+    } else {
+      console.log(`❌ Workflow execution failed: ${job.executionId}`);
+      console.log(`   Error: ${result.error}`);
+    }
   } catch (error) {
-    console.error(`❌ Workflow execution failed: ${job.executionId}`, error);
+    console.error(`❌ Workflow execution failed with exception: ${job.executionId}`);
+    console.error(error);
   }
 }

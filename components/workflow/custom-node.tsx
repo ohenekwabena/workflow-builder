@@ -16,8 +16,10 @@ export function CustomNode({ id, data, selected }: NodeProps<WorkflowNode["data"
   const nodeDefinition = getNodeTypeDefinition(data.nodeType);
   const currentNode = nodes.find((n) => n.id === id);
 
-  const handleConfigClick = () => {
+  const handleConfigClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
     if (currentNode) {
+      console.log("Opening config for node:", currentNode.id);
       setSelectedNode(currentNode);
     }
   };

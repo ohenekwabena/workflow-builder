@@ -1,4 +1,4 @@
-import { supabaseAdmin } from "../supabase/client";
+import { supabaseAdmin } from "../supabase/server";
 import { NODE_HANDLERS } from "./node-handlers";
 import { NodeExecutionContext } from "./node-handlers/types";
 
@@ -166,7 +166,7 @@ export class WorkflowExecutionEngine {
   }
 
   private getExecutionOrder(): string[] {
-    // Simple topological sort
+    // Simple topological sort - start from triggers and traverse to children
     const visited = new Set<string>();
     const order: string[] = [];
 
@@ -174,14 +174,14 @@ export class WorkflowExecutionEngine {
       if (visited.has(nodeId)) return;
 
       visited.add(nodeId);
-
-      // Visit dependencies first
-      const parentEdges = this.edges.filter((e) => e.target === nodeId);
-      for (const edge of parentEdges) {
-        visit(edge.source);
-      }
-
       order.push(nodeId);
+
+      // Visit children nodes (nodes that depend on this one)
+      const childEdges = this.edges.filter((e) => e.source === nodeId);
+
+      for (const edge of childEdges) {
+        visit(edge.target);
+      }
     };
 
     // Start from nodes with no incoming edges (triggers)
