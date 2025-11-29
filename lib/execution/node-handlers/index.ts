@@ -102,6 +102,14 @@ export const emailActionHandler: NodeHandler = {
   execute: async (config, input, context) => {
     const { to, subject, body } = config;
 
+    if (!to) {
+      throw new Error("Email node requires a 'to' address");
+    }
+
+    if (!process.env.RESEND_API_KEY) {
+      throw new Error("RESEND_API_KEY environment variable is not set");
+    }
+
     // Use template variables from input
     const processedBody = replaceTemplateVars(body, input);
     const processedSubject = replaceTemplateVars(subject, input);
@@ -114,7 +122,7 @@ export const emailActionHandler: NodeHandler = {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        from: "workflows@yourdomain.com",
+        from: "workflows@notifications.ohenekwabena.xyz",
         to,
         subject: processedSubject,
         html: processedBody,
@@ -122,7 +130,8 @@ export const emailActionHandler: NodeHandler = {
     });
 
     if (!response.ok) {
-      throw new Error("Failed to send email");
+      const errorData = await response.json().catch(() => ({ message: response.statusText }));
+      throw new Error(`Failed to send email: ${errorData.message || response.statusText} (Status: ${response.status})`);
     }
 
     const result = await response.json();
