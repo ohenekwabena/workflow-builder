@@ -37,9 +37,12 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
 
     if (stepsError) throw stepsError;
 
+    // Combine execution with steps
     return NextResponse.json({
-      execution,
-      steps,
+      execution: {
+        ...execution,
+        steps: steps || [],
+      },
     });
   } catch (error: any) {
     return NextResponse.json({ error: error.message }, { status: 500 });
