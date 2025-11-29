@@ -224,7 +224,10 @@ export function WorkflowList() {
                       <p className="text-sm text-gray-500 line-clamp-2">{workflow.description}</p>
                     )}
                   </div>
-                  <Badge variant={workflow.is_active ? "default" : "secondary"}>
+                  <Badge
+                    variant={workflow.is_active ? "default" : "secondary"}
+                    className={workflow.is_active ? "bg-green-500 hover:bg-green-600" : ""}
+                  >
                     {workflow.is_active ? "Active" : "Inactive"}
                   </Badge>
                 </div>

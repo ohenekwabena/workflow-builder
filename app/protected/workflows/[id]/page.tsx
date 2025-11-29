@@ -7,7 +7,7 @@ import { useWorkflowStore } from "@/lib/workflow/store";
 import { LiveExecutionPanel } from "@/components/execution/live-execution-panel";
 import { ScheduleTriggerModal } from "@/components/workflow/schedule-trigger-modal";
 import { WebhookTestingModal } from "@/components/workflow/webhook-testing-modal";
-import { Loader2, ArrowLeft, Clock, Webhook, Play } from "lucide-react";
+import { Loader2, ArrowLeft, Clock, Webhook, Play, Power } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { motion } from "framer-motion";
@@ -124,6 +124,24 @@ export default function WorkflowEditorPage() {
     }
   };
 
+  const handleToggleActive = async () => {
+    try {
+      const newActiveState = !workflow?.is_active;
+      const response = await fetch(`/api/workflows/${workflowId}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ is_active: newActiveState }),
+      });
+
+      if (!response.ok) throw new Error("Failed to update workflow");
+
+      const data = await response.json();
+      setWorkflow(data.workflow);
+    } catch (error) {
+      console.error("Error toggling workflow active state:", error);
+    }
+  };
+
   const handleExecuteWorkflow = async () => {
     try {
       const response = await fetch(`/api/workflows/${workflowId}/execute`, {
@@ -188,6 +206,16 @@ export default function WorkflowEditorPage() {
         </div>
 
         <div className="flex items-center gap-2">
+          <Button
+            variant={workflow?.is_active ? "default" : "outline"}
+            size="sm"
+            onClick={handleToggleActive}
+            className={workflow?.is_active ? "gap-2 bg-green-500 hover:bg-green-600" : "gap-2"}
+          >
+            <Power className="w-4 h-4" />
+            {workflow?.is_active ? "Active" : "Inactive"}
+          </Button>
+
           <Button variant="outline" size="sm" onClick={() => setShowScheduleModal(true)} className="gap-2">
             <Clock className="w-4 h-4" />
             Schedule
