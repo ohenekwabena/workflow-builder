@@ -7,6 +7,7 @@ import { Plus, Loader2, Play, Trash2, Clock, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { AlertDialog } from "@/components/ui/alert-dialog";
 import { Workflow } from "@/lib/workflow/types";
 import { TemplateLibraryModal } from "./template-library-modal";
 import { formatDistanceToNow } from "date-fns";
@@ -18,6 +19,10 @@ export function WorkflowList() {
   const [isLoading, setIsLoading] = useState(true);
   const [isCreating, setIsCreating] = useState(false);
   const [showTemplates, setShowTemplates] = useState(false);
+  const [deleteDialog, setDeleteDialog] = useState<{ isOpen: boolean; workflowId: string | null }>({
+    isOpen: false,
+    workflowId: null,
+  });
 
   useEffect(() => {
     fetchWorkflows();
@@ -97,8 +102,6 @@ export function WorkflowList() {
   };
 
   const handleDeleteWorkflow = async (id: string) => {
-    if (!confirm("Are you sure you want to delete this workflow?")) return;
-
     try {
       const response = await fetch(`/api/workflows/${id}`, {
         method: "DELETE",
@@ -113,7 +116,14 @@ export function WorkflowList() {
       toast.error("Failed to delete workflow", {
         description: error instanceof Error ? error.message : "Unknown error",
       });
+    } finally {
+      setDeleteDialog({ isOpen: false, workflowId: null });
     }
+  };
+
+  const confirmDelete = (id: string, e: React.MouseEvent) => {
+    e.stopPropagation();
+    setDeleteDialog({ isOpen: true, workflowId: id });
   };
 
   const handleExecuteWorkflow = async (id: string, e: React.MouseEvent) => {
@@ -254,10 +264,7 @@ export function WorkflowList() {
                     <Button
                       size="sm"
                       variant="ghost"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        handleDeleteWorkflow(workflow.id);
-                      }}
+                      onClick={(e) => confirmDelete(workflow.id, e)}
                       className="gap-1 text-red-500 hover:text-red-600"
                     >
                       <Trash2 className="w-3 h-3" />
@@ -274,6 +281,18 @@ export function WorkflowList() {
       {showTemplates && (
         <TemplateLibraryModal onClose={() => setShowTemplates(false)} onSelectTemplate={handleCreateFromTemplate} />
       )}
+
+      {/* Delete Confirmation Dialog */}
+      <AlertDialog
+        isOpen={deleteDialog.isOpen}
+        onClose={() => setDeleteDialog({ isOpen: false, workflowId: null })}
+        onConfirm={() => deleteDialog.workflowId && handleDeleteWorkflow(deleteDialog.workflowId)}
+        title="Delete Workflow"
+        description="Are you sure you want to delete this workflow? This action cannot be undone."
+        confirmText="Delete"
+        cancelText="Cancel"
+        variant="destructive"
+      />
     </div>
   );
 }
