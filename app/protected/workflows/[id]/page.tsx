@@ -57,8 +57,8 @@ export default function WorkflowEditorPage() {
       if (!response.ok) return;
 
       const data = await response.json();
-      if (data.webhook) {
-        setWebhookUrl(data.webhook.url);
+      if (data.webhook_url) {
+        setWebhookUrl(data.webhook_url);
       }
     } catch (error) {
       console.error("Error fetching webhook:", error);
@@ -74,7 +74,7 @@ export default function WorkflowEditorPage() {
       if (!response.ok) throw new Error("Failed to create webhook");
 
       const data = await response.json();
-      setWebhookUrl(data.webhook.url);
+      setWebhookUrl(data.webhook_url);
       setShowWebhookModal(true);
     } catch (error) {
       console.error("Error creating webhook:", error);
