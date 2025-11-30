@@ -16,7 +16,12 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
     }
     const { data: executions, error } = await supabase
       .from("workflow_executions")
-      .select("*")
+      .select(
+        `
+        *,
+        steps:workflow_execution_steps(duration_ms)
+      `
+      )
       .eq("workflow_id", id)
       .eq("user_id", user.id)
       .order("created_at", { ascending: false })
@@ -24,7 +29,17 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
 
     if (error) throw error;
 
-    return NextResponse.json({ executions });
+    // Calculate duration_ms from steps if not present
+    const executionsWithDuration = executions?.map((execution: any) => {
+      if (!execution.duration_ms && execution.steps?.length > 0) {
+        execution.duration_ms = execution.steps.reduce((sum: number, step: any) => sum + (step.duration_ms || 0), 0);
+      }
+      // Remove steps array from response
+      delete execution.steps;
+      return execution;
+    });
+
+    return NextResponse.json({ executions: executionsWithDuration });
   } catch (error: any) {
     return NextResponse.json({ error: error.message }, { status: 500 });
   }

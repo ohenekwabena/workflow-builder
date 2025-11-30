@@ -221,6 +221,17 @@ export class WorkflowExecutionEngine {
 
     if (status === "success" || status === "failed") {
       updateData.completed_at = new Date().toISOString();
+
+      // Calculate total duration from all steps
+      const { data: steps } = await supabaseAdmin()
+        .from("workflow_execution_steps")
+        .select("duration_ms")
+        .eq("execution_id", this.executionId);
+
+      if (steps && steps.length > 0) {
+        const totalDuration = steps.reduce((sum, step) => sum + (step.duration_ms || 0), 0);
+        updateData.duration_ms = totalDuration;
+      }
     }
 
     if (errorMessage) {

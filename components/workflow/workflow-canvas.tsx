@@ -126,7 +126,6 @@ export function WorkflowCanvas() {
           >
             <Button
               onClick={() => {
-                console.log("Add node button clicked");
                 setShowNodeLibrary(true);
               }}
               size="sm"

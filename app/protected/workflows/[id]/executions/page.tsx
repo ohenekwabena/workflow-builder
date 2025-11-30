@@ -91,7 +91,11 @@ export default function WorkflowExecutionsPage() {
 
       {/* Executions List */}
       {executions.length === 0 ? (
-        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="text-center py-12 sm:py-20 px-4">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="text-center py-12 sm:py-20 px-4"
+        >
           <div className="text-4xl sm:text-6xl mb-4">📊</div>
           <h3 className="text-xl sm:text-2xl font-bold mb-2">No executions yet</h3>
           <p className="text-sm sm:text-base text-gray-500 mb-6">Run your workflow to see execution history here</p>
@@ -116,7 +120,9 @@ export default function WorkflowExecutionsPage() {
                     <div className="mt-1">{getStatusIcon(execution.status)}</div>
                     <div className="flex-1 min-w-0">
                       <div className="flex flex-wrap items-center gap-2 sm:gap-3 mb-2">
-                        <h3 className="font-semibold text-sm sm:text-base truncate">Execution #{execution.id.slice(0, 8)}</h3>
+                        <h3 className="font-semibold text-sm sm:text-base truncate">
+                          Execution #{execution.id.slice(0, 8)}
+                        </h3>
                         {getStatusBadge(execution.status)}
                       </div>
 
@@ -133,16 +139,18 @@ export default function WorkflowExecutionsPage() {
                           </div>
                         )}
 
-                        {execution.completed_at && (
+                        {execution.completed_at && execution.duration_ms && (
                           <div className="flex items-center gap-2">
                             <span className="text-gray-500">Duration:</span>
-                            <span>{execution.duration_ms ? `${execution.duration_ms}ms` : "N/A"}</span>
+                            <span>{execution.duration_ms}ms</span>
                           </div>
                         )}
 
                         {execution.error_message && (
                           <div className="mt-2 p-2 sm:p-3 bg-red-50 dark:bg-red-900/20 rounded-lg border border-red-200 dark:border-red-800">
-                            <p className="text-xs sm:text-sm text-red-600 dark:text-red-400 break-words">{execution.error_message}</p>
+                            <p className="text-xs sm:text-sm text-red-600 dark:text-red-400 break-words">
+                              {execution.error_message}
+                            </p>
                           </div>
                         )}
                       </div>

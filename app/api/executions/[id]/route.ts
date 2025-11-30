@@ -37,6 +37,11 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
 
     if (stepsError) throw stepsError;
 
+    // Calculate duration_ms from steps if not present
+    if (!execution.duration_ms && steps && steps.length > 0) {
+      execution.duration_ms = steps.reduce((sum: number, step: any) => sum + (step.duration_ms || 0), 0);
+    }
+
     // Combine execution with steps
     return NextResponse.json({
       execution: {
