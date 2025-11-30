@@ -97,6 +97,7 @@ export async function GET(request: NextRequest) {
               schedule,
               triggered_at: now.toISOString(),
             },
+            triggerType: "schedule",
           });
 
           console.log(`    ✅ Triggered execution: ${execution.id}`);

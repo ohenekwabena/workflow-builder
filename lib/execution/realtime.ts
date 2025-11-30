@@ -3,7 +3,7 @@ import { RealtimeChannel } from "@supabase/supabase-js";
 
 export interface ExecutionUpdate {
   execution_id: string;
-  status: "queued" | "running" | "completed" | "failed";
+  status: "queued" | "running" | "success" | "failed";
   current_step?: string;
   progress?: number;
   error?: string;
@@ -14,7 +14,7 @@ export interface StepUpdate {
   step_id: string;
   execution_id: string;
   node_id: string;
-  status: "pending" | "running" | "completed" | "failed";
+  status: "pending" | "running" | "success" | "failed";
   output?: any;
   error?: string;
 }
@@ -48,16 +48,16 @@ export class ExecutionRealtimeSubscription {
           const update: ExecutionUpdate = {
             execution_id: execution.id,
             status: execution.status,
-            error: execution.error,
+            error: execution.error_message,
             result: execution.result,
           };
 
           callbacks.onExecutionUpdate?.(update);
 
-          if (execution.status === "completed") {
+          if (execution.status === "success") {
             callbacks.onComplete?.(execution.result);
           } else if (execution.status === "failed") {
-            callbacks.onError?.(execution.error);
+            callbacks.onError?.(execution.error_message);
           }
         }
       )
@@ -76,7 +76,7 @@ export class ExecutionRealtimeSubscription {
             execution_id: step.execution_id,
             node_id: step.node_id,
             status: step.status,
-            output: step.output,
+            output: step.output_data,
             error: step.error_message,
           };
 

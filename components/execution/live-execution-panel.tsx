@@ -15,7 +15,7 @@ interface LiveExecutionPanelProps {
 
 interface StepStatus {
   node_id: string;
-  status: "pending" | "running" | "completed" | "failed";
+  status: "pending" | "running" | "completed" | "failed" | "success";
   output?: any;
   error?: string;
 }
@@ -27,20 +27,60 @@ export function LiveExecutionPanel({ executionId, workflowNodes, onClose }: Live
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
+    // Initial fetch to get current state
+    const fetchInitialState = async () => {
+      try {
+        const response = await fetch(`/api/executions/${executionId}`);
+        if (!response.ok) return;
+
+        const data = await response.json();
+        const execution = data.execution;
+
+        setExecutionStatus(execution.status);
+        if (execution.error_message) setError(execution.error_message);
+
+        // Update step statuses from API
+        if (execution.steps) {
+          setStepStatuses((prev) => {
+            const next = new Map(prev);
+            execution.steps.forEach((step: any) => {
+              next.set(step.node_id, {
+                node_id: step.node_id,
+                status: step.status === "success" ? "completed" : step.status,
+                output: step.output_data,
+                error: step.error_message,
+              });
+            });
+            return next;
+          });
+        }
+
+        if (execution.status === "success") {
+          setResult(execution.result || { success: true });
+        }
+      } catch (error) {
+        console.error("Error fetching initial execution state:", error);
+      }
+    };
+
+    fetchInitialState();
+
     const realtime = getRealtimeSubscription();
 
     const unsubscribe = realtime.subscribeToExecution(executionId, {
       onExecutionUpdate: (update) => {
+        console.log("Execution update:", update);
         setExecutionStatus(update.status);
         if (update.error) setError(update.error);
         if (update.result) setResult(update.result);
       },
       onStepUpdate: (update) => {
+        console.log("Step update:", update);
         setStepStatuses((prev) => {
           const next = new Map(prev);
           next.set(update.node_id, {
             node_id: update.node_id,
-            status: update.status,
+            status: update.status === "success" ? "completed" : update.status,
             output: update.output,
             error: update.error,
           });
@@ -48,15 +88,62 @@ export function LiveExecutionPanel({ executionId, workflowNodes, onClose }: Live
         });
       },
       onComplete: (result) => {
+        console.log("Execution complete:", result);
         setResult(result);
+        setExecutionStatus("success");
       },
       onError: (error) => {
+        console.log("Execution error:", error);
         setError(error);
+        setExecutionStatus("failed");
       },
     });
 
+    // Polling fallback in case realtime doesn't work
+    const pollInterval = setInterval(async () => {
+      try {
+        const response = await fetch(`/api/executions/${executionId}`);
+        if (!response.ok) return;
+
+        const data = await response.json();
+        const execution = data.execution;
+
+        console.log("Polling update - status:", execution.status);
+        setExecutionStatus(execution.status);
+        if (execution.error_message) setError(execution.error_message);
+
+        // Update step statuses from API
+        if (execution.steps) {
+          setStepStatuses((prev) => {
+            const next = new Map(prev);
+            execution.steps.forEach((step: any) => {
+              next.set(step.node_id, {
+                node_id: step.node_id,
+                status: step.status === "success" ? "completed" : step.status,
+                output: step.output_data,
+                error: step.error_message,
+              });
+            });
+            return next;
+          });
+        }
+
+        // Stop polling if execution is complete
+        if (execution.status === "success" || execution.status === "failed") {
+          console.log("Stopping poll - execution complete");
+          clearInterval(pollInterval);
+          if (execution.status === "success") {
+            setResult(execution.result || { success: true });
+          }
+        }
+      } catch (error) {
+        console.error("Error polling execution:", error);
+      }
+    }, 1000); // Poll every second
+
     return () => {
       unsubscribe();
+      clearInterval(pollInterval);
     };
   }, [executionId]);
 
@@ -105,7 +192,7 @@ export function LiveExecutionPanel({ executionId, workflowNodes, onClose }: Live
                     className={`p-4 rounded-lg border-2 transition-all ${
                       stepStatus === "running"
                         ? "border-blue-500 bg-blue-50 dark:bg-blue-900/20"
-                        : stepStatus === "completed"
+                        : stepStatus === "completed" || stepStatus === "success"
                         ? "border-green-500 bg-green-50 dark:bg-green-900/20"
                         : stepStatus === "failed"
                         ? "border-red-500 bg-red-50 dark:bg-red-900/20"
@@ -160,9 +247,7 @@ export function LiveExecutionPanel({ executionId, workflowNodes, onClose }: Live
           {result && (
             <div className="mt-6 p-4 bg-green-50 dark:bg-green-900/20 rounded-lg border border-green-200 dark:border-green-800">
               <h4 className="font-semibold text-sm text-green-900 dark:text-green-100 mb-2">Execution Result</h4>
-              <pre className="text-xs text-green-800 dark:text-green-200 overflow-x-auto">
-                {JSON.stringify(result, null, 2)}
-              </pre>
+              <pre className="text-xs text-green-800 dark:text-green-200 overflow-x-auto">Completed successfully</pre>
             </div>
           )}
 

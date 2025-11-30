@@ -17,7 +17,14 @@ export async function processWorkflowQueue() {
   console.log(`  Edges: ${job.edges.length}`);
 
   try {
-    const engine = new WorkflowExecutionEngine(job.executionId, job.workflowId, job.userId, job.nodes, job.edges);
+    const engine = new WorkflowExecutionEngine(
+      job.executionId,
+      job.workflowId,
+      job.userId,
+      job.nodes,
+      job.edges,
+      job.triggerType || "webhook"
+    );
 
     const result = await engine.execute(job.triggerInput);
 

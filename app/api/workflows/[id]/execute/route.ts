@@ -54,8 +54,23 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
       nodes: workflow.nodes,
       edges: workflow.edges,
       triggerInput,
+      triggerType: "manual",
     }).catch((error) => {
-      console.error("Workflow execution error:", error);
+      console.error("❌ Workflow execution error:", error);
+      console.error("Error stack:", error.stack);
+      // Update execution status to failed
+      supabaseAdmin()
+        .from("workflow_executions")
+        .update({
+          status: "failed",
+          error_message: error.message,
+          completed_at: new Date().toISOString(),
+        })
+        .eq("id", execution.id)
+        .then(
+          () => console.log("Updated execution status to failed"),
+          (updateError: any) => console.error("Failed to update execution status:", updateError)
+        );
     });
 
     return NextResponse.json({

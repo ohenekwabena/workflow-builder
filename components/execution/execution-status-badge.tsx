@@ -4,7 +4,7 @@ import { Badge } from "@/components/ui/badge";
 import { Loader2, CheckCircle2, XCircle, Clock } from "lucide-react";
 
 interface ExecutionStatusBadgeProps {
-  status: "queued" | "running" | "completed" | "failed";
+  status: "queued" | "running" | "success" | "completed" | "failed";
   size?: "sm" | "md" | "lg";
 }
 
@@ -31,6 +31,11 @@ export function ExecutionStatusBadge({ status, size = "md" }: ExecutionStatusBad
       icon: <Loader2 className={`${iconSize[size]} animate-spin`} />,
       label: "Running",
       className: "bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-300",
+    },
+    success: {
+      icon: <CheckCircle2 className={iconSize[size]} />,
+      label: "Success",
+      className: "bg-green-100 text-green-700 dark:bg-green-900 dark:text-green-300",
     },
     completed: {
       icon: <CheckCircle2 className={iconSize[size]} />,

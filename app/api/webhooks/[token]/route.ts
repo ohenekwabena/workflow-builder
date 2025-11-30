@@ -54,6 +54,7 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
       nodes: webhook.workflows.nodes,
       edges: webhook.workflows.edges,
       triggerInput: payload,
+      triggerType: "webhook",
     });
 
     return NextResponse.json({

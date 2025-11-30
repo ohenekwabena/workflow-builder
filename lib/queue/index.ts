@@ -21,6 +21,7 @@ export interface QueuedWorkflow {
   nodes: any[];
   edges: any[];
   triggerInput: any;
+  triggerType?: string;
   enqueuedAt: string;
 }
 

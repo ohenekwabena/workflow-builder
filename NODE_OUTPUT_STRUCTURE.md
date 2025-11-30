@@ -6,6 +6,14 @@ This document describes the data structure output by each node type in the workf
 
 Each node in a workflow receives input data from previous nodes and produces output data that flows to subsequent nodes. The output structure varies by node type.
 
+### Trigger Node Behavior
+
+**Important**: When a workflow is executed manually (via "Run Now" button), all trigger nodes are automatically skipped. The execution starts from the nodes immediately after the trigger nodes, using the provided input data. This allows you to test and run workflows without waiting for scheduled triggers or webhook events.
+
+- **Manual Execution**: Trigger nodes are skipped, execution starts from downstream nodes
+- **Webhook Execution**: Webhook trigger node is executed with the webhook payload
+- **Schedule Execution**: Schedule trigger node is executed when the cron schedule fires
+
 ## Node Types and Output Structures
 
 ### 1. Trigger Nodes
